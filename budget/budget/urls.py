@@ -20,6 +20,7 @@ from budget import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('cashflow.urls')),
 ]
 
 if settings.DEBUG:
