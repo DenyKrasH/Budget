@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import FormView
 
 from budget import settings
+from cashflow.models import Budget, Category, Account
 
 
 def index(request):
@@ -25,4 +26,22 @@ class RegisterView(FormView):
         user = form.save()
         if user is not None:
             login(self.request, user)
+
+            Account.objects.create(user=user)
+
+            budget = Budget.objects.create()
+            budget.user.add(user)
+
+            Category.objects.create(name='Eating out', budget=budget)
+            Category.objects.create(name='Food', budget=budget)
+            Category.objects.create(name='Entertainment', budget=budget)
+            Category.objects.create(name='House', budget=budget)
+            Category.objects.create(name='Transport', budget=budget)
+            Category.objects.create(name='Clothes', budget=budget)
+            Category.objects.create(name='Health', budget=budget)
+            Category.objects.create(name='Gift', budget=budget)
+
+            Category.objects.create(name='Salary', type=2, budget=budget)
+            Category.objects.create(name='Sale', type=2, budget=budget)
+            Category.objects.create(name='Refunds', type=2, budget=budget)
         return super(RegisterView, self).form_valid(form)

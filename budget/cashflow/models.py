@@ -3,8 +3,11 @@ from django.db import models
 
 
 class Account(models.Model):
-    user = User
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.user
 
 
 class Budget(models.Model):
@@ -25,6 +28,9 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     type = models.PositiveSmallIntegerField(choices=TYPE, default=1)
     budget = models.ForeignKey('Budget', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Budget id: {self.budget.pk} - {self.name}'
 
 
 class Cashflow(models.Model):
