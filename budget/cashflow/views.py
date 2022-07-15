@@ -27,7 +27,8 @@ class RegisterView(FormView):
         if user is not None:
             login(self.request, user)
 
-            Account.objects.create(user=user)
+            Account.objects.create(user=user, name='Cash')
+            Account.objects.create(user=user, name='Payment card')
 
             budget = Budget.objects.create()
             budget.user.add(user)

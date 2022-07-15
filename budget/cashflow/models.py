@@ -3,11 +3,12 @@ from django.db import models
 
 
 class Account(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default='Account')
     balance = models.FloatField(default=0)
 
     def __str__(self):
-        return self.user
+        return f'User: {self.user.username} - {self.name}'
 
 
 class Budget(models.Model):
