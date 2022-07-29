@@ -37,6 +37,6 @@ class Category(models.Model):
 class Cashflow(models.Model):
     sum = models.FloatField()
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    note = models.CharField(max_length=255)
+    note = models.CharField(max_length=255, blank=True, null=True)
     datetime = models.DateTimeField(auto_now_add=True)
     account = models.ForeignKey('Account', on_delete=models.CASCADE)

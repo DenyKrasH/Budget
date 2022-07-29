@@ -1,0 +1,32 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<table class="table table-sm">
+    <tr>
+        <th>ID</th>
+        <th>Category</th>
+        <th>Date</th>
+    </tr>
+    {% for cashflow in cashflows %}
+    <tr>
+        <td>{{ cashflow.id }}</td>
+        <td>{{ cashflow.category.name }}</td>
+        <td>{{ cashflow.datetime }}</td>
+        <td>{{ cashflow.name }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<table class="table table-sm">
+    <tr>
+        <th>Category</th>
+        <th>Sum</th>
+    </tr>
+    {% for ca in cat %}
+    <tr>
+        <td>{{ ca.category__name }}</td>
+        <td>{{ ca.sum }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}
