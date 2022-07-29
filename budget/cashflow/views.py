@@ -18,7 +18,12 @@ def index(request, budget_pk):
         .values('category', 'category__name')\
         .annotate(sum=Sum('sum'))
 
-    context = {'cashflows': cashflows, 'cat': cat}
+    chart_data = [['Category', 'Sum']]
+    for item in cat:
+        chart_data.append([item['category__name'], item['sum']])
+
+    context = {'cashflows': cashflows, 'cat': cat, 'chart_data': chart_data,
+               'chart_title': 'Expense chart'}
     return render(request, 'cashflow/index.html', context)
 
 
