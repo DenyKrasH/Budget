@@ -30,7 +30,7 @@ class RegisterView(FormView):
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
-        return super(RegisterView, self).get(*args, **kwargs)
+        return super().get(*args, **kwargs)
 
     def form_valid(self, form):
         user = form.save()
@@ -55,7 +55,7 @@ class RegisterView(FormView):
             Category.objects.create(name='Salary', type=2, budget=budget)
             Category.objects.create(name='Sale', type=2, budget=budget)
             Category.objects.create(name='Refunds', type=2, budget=budget)
-        return super(RegisterView, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class CategoryCreate(CreateView):
@@ -66,7 +66,7 @@ class CategoryCreate(CreateView):
     def form_valid(self, form):
         budget = Budget.objects.get(pk=self.kwargs['budget_pk'])
         form.instance.budget = budget
-        return super(CategoryCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class CategoryUpdate(UpdateView):
@@ -82,7 +82,7 @@ class AccountCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super(AccountCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class BudgetCreate(CreateView):
@@ -94,4 +94,4 @@ class BudgetCreate(CreateView):
         if form.is_valid():
             budget = form.save()
             budget.user.add(self.request.user)
-        return super(BudgetCreate, self).form_valid(form)
+        return super().form_valid(form)
