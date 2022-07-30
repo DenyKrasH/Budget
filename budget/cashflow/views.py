@@ -9,21 +9,26 @@ from budget import settings
 from cashflow.models import Budget, Category, Account, Cashflow
 
 
+menu = {'Category': {'title': 'Category', 'url_name': 'account-create'},
+        'Budget': {'title': 'Overall budget', 'url_name': 'budget-create'},
+        '124': {'title': 'User', 'url_name': 'logout'}}
+
+
 def index(request, budget_pk):
     cashflows = Cashflow.objects.select_related('category__budget')\
         .filter(category__budget=budget_pk)
 
-    cat = Cashflow.objects.select_related('category__budget') \
-        .filter(category__budget=budget_pk) \
+    category_expense = Cashflow.objects.select_related('category__budget') \
+        .filter(category__budget=budget_pk, category__type=1) \
         .values('category', 'category__name')\
         .annotate(sum=Sum('sum'))
 
     chart_data = [['Category', 'Sum']]
-    for item in cat:
+    for item in category_expense:
         chart_data.append([item['category__name'], item['sum']])
 
-    context = {'cashflows': cashflows, 'cat': cat, 'chart_data': chart_data,
-               'chart_title': 'Expense chart'}
+    context = {'cashflows': cashflows, 'category_expense': category_expense, 'chart_data': chart_data,
+               'chart_title': 'Expense chart', 'menu': menu}
     return render(request, 'cashflow/index.html', context)
 
 
