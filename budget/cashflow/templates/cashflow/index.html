@@ -1,52 +1,40 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} {% block scripts %}
+<script
+  type="text/javascript"
+  src="https://www.gstatic.com/charts/loader.js"
+></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable( {{ chart_data | safe}} );
 
-{% block scripts %}
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable( {{ chart_data | safe}} );
+    var options = {
+      title: '{{ chart_title }}',
+      is3D: true,
+    };
 
-        var options = {
-          title: '{{ chart_title }}',
-          is3D: true,
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-        chart.draw(data, options);
-      }
-    </script>
-{% endblock %}
-
-{% block content %}
-<div id="piechart_3d" style="width: 900px; height: 500px;"></div>
-<table class="table table-sm">
+    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+  }
+</script>
+{% endblock %} {% block content %}
+<div class="main_info">
+  <table>
     <tr>
-        <th>ID</th>
-        <th>Category</th>
-        <th>Date</th>
+      <th>ID</th>
+      <th>Category</th>
+      <th>Date</th>
     </tr>
     {% for cashflow in cashflows %}
     <tr>
-        <td>{{ cashflow.id }}</td>
-        <td>{{ cashflow.category.name }}</td>
-        <td>{{ cashflow.datetime }}</td>
-        <td>{{ cashflow.name }}</td>
+      <td>{{ cashflow.id }}</td>
+      <td>{{ cashflow.category.name }}</td>
+      <td>{{ cashflow.datetime }}</td>
+      <td>{{ cashflow.name }}</td>
     </tr>
     {% endfor %}
-</table>
-
-<table class="table table-sm">
-    <tr>
-        <th>Category</th>
-        <th>Sum</th>
-    </tr>
-    {% for ca in category_expense %}
-    <tr>
-        <td>{{ ca.category__name }}</td>
-        <td>{{ ca.sum }}</td>
-    </tr>
-    {% endfor %}
-</table>
+  </table>
+  <div id="piechart_3d" style="width: 900px; height: 500px"></div>
+</div>
 {% endblock content %}

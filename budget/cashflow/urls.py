@@ -5,7 +5,7 @@ from cashflow.views import index, RegisterView, CategoryCreate, AccountCreate, \
     CategoryUpdate, BudgetCreate
 
 urlpatterns = [
-    path('<int:budget_pk>', index),
+    path('<int:budget_pk>', index, name='index'),
     path('login/', LoginView.as_view(redirect_authenticated_user=True),
          name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),

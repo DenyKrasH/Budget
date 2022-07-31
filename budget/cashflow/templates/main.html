@@ -2,34 +2,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Budget</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 
-    {% block scripts %}
-
-    {% endblock %}
+    {% block scripts %} {% endblock %}
 </head>
 <body>
-
 {% if request.user.is_authenticated %}
 <nav>
-    <ul>
-        <li>Logo</li>
-        {% for item in menu.values %}
-        <li><a href="{% url item.url_name %}">{{ item.title }}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="test">
+        <ul class="topmenu">
+            <li>Logo</li>
+            {% for item in menu.values %}
+            {% if item.submenu %}
+            <li class="down">
+                <a href="">{{ item.title }}</a>
+
+                <ul class="submenu">
+                    {% for i in item.submenu %}
+                    <li>
+                        {% if i.pk %}
+                        <a href="{% url i.url_name i.pk %}">{{ i.title }}</a>
+                        {% else %}
+                        <a href="{% url i.url_name%}">{{ i.title }}</a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <li class="navigation__link">
+                    <a href="{% url item.url_name %}">{{ item.title }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </nav>
 {% endif %}
 
-<div class="container">
-    {% block content %}
-
-    {% endblock %}
-</div>
+<div class="container">{% block content %} {% endblock %}</div>
 </body>
 </html>
