@@ -9,11 +9,17 @@ from budget import settings
 from cashflow.models import Budget, Category, Account, Cashflow
 
 menu = {'Category': {'title': 'Category', 'url_name': 'account-create'},
-        'Budget': {'title': 'Overall budget', 'url_name': 'budget-create'},
-        '124': {'title': 'User', 'url_name': 'logout'}}
+        'Budget': {'title': 'Overall budget', 'url_name': ''},
+        'User': {'title': 'User', 'url_name': '',
+                 'submenu': [{'title': 'Logout', 'url_name': 'logout'}]}}
 
 
-def index(request, budget_pk):
+def index(request):
+    budget_pk = Budget.objects.values('pk').get(user=request.user, type=1)['pk']
+    return redirect('budget', budget_pk=budget_pk)
+
+
+def budget(request, budget_pk):
     cashflows = Cashflow.objects.select_related('category__budget') \
         .filter(category__budget=budget_pk)
 
@@ -26,13 +32,17 @@ def index(request, budget_pk):
     for item in category_expense:
         chart_data.append([item['category__name'], item['sum']])
 
-    submenu = [{'title': 'Create budget', 'url_name': 'budget-create'}, ]
+    budget_submenu = [{'title': 'Create budget', 'url_name': 'budget-create'}, ]
     overall_budgets = Budget.objects.filter(user=request.user, type=2)
 
-    for item in overall_budgets:
-        submenu.append({'title': item.name, 'url_name': 'index', 'pk': item.pk})
+    for budget in overall_budgets:
+        budget_submenu.append({'title': budget.name,
+                        'url_name': 'budget',
+                        'pk': budget.pk})
 
-    menu['Budget']['submenu'] = submenu
+    menu['User']['title'] = request.user.username.title()
+
+    menu['Budget']['submenu'] = budget_submenu
 
     context = {'cashflows': cashflows, 'category_expense': category_expense,
                'chart_data': chart_data, 'chart_title': 'Expense chart',
